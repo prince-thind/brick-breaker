@@ -18,6 +18,8 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
+let gameOver = false;
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
@@ -25,6 +27,7 @@ function animate() {
   clearFrame();
   drawBall();
   drawPaddle();
+  if (gameOver) return;
   requestAnimationFrame(animate);
 }
 
@@ -71,8 +74,16 @@ function updateBallCordinates() {
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-  if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+
+  if (y + dy < ballRadius) {
     dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
+    } else {
+      gameOver = true;
+      displayGameOver();
+    }
   }
 }
 
@@ -90,4 +101,9 @@ function keyUpHandler(e) {
   } else if (e.key == "Left" || e.key == "ArrowLeft") {
     leftPressed = false;
   }
+}
+
+function displayGameOver() {
+  alert("GAME OVER");
+  document.location.reload();
 }

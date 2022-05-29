@@ -36,11 +36,12 @@ for (let c = 0; c < brickColumnCount; c++) {
   }
 }
 
-let score=0;
-
+let score = 0;
+let lives = 3;
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function animate() {
   clearFrame();
@@ -49,6 +50,7 @@ function animate() {
   drawBricks();
   collisionDetection();
   drawScore();
+  drawLives();
   if (gameOver) return;
   requestAnimationFrame(animate);
 }
@@ -103,8 +105,17 @@ function updateBallCordinates() {
     if (x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
-      gameOver = true;
-      displayGameOver();
+      lives--;
+      if (!lives) {
+        gameOver = true;
+        displayGameOver();
+      } else {
+        x = canvas.width / 2;
+        y = canvas.height - 30;
+        dx = 2;
+        dy = -2;
+        paddleX = (canvas.width - paddleWidth) / 2;
+      }
     }
   }
 }
@@ -151,16 +162,16 @@ function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
       let b = bricks[c][r];
-      if(b.status==0) continue;
+      if (b.status == 0) continue;
       if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
         dy = -dy;
         b.status = 0;
         score++;
 
-        if(score == brickRowCount*brickColumnCount) {
-            alert("YOU WIN, CONGRATULATIONS!");
-            document.location.reload();
-            clearInterval(interval); // Needed for Chrome to end game
+        if (score == brickRowCount * brickColumnCount) {
+          alert("YOU WIN, CONGRATULATIONS!");
+          document.location.reload();
+          clearInterval(interval); // Needed for Chrome to end game
         }
       }
     }
@@ -168,7 +179,20 @@ function collisionDetection() {
 }
 
 function drawScore() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
-    ctx.fillText("Score: "+score, 8, 20);
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: " + score, 8, 20);
+}
+
+function mouseMoveHandler(e) {
+  let relativeX = e.clientX - canvas.offsetLeft;
+  if (relativeX > 0 && relativeX < canvas.width) {
+    paddleX = relativeX - paddleWidth / 2;
+  }
+}
+
+function drawLives() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
 }

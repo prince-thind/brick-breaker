@@ -32,7 +32,7 @@ const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0 };
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
 
@@ -44,6 +44,7 @@ function animate() {
   drawBall();
   drawPaddle();
   drawBricks();
+  collisionDetection();
   if (gameOver) return;
   requestAnimationFrame(animate);
 }
@@ -126,8 +127,9 @@ function displayGameOver() {
 }
 
 function drawBricks() {
-  for (var c = 0; c < brickColumnCount; c++) {
-    for (var r = 0; r < brickRowCount; r++) {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      if (bricks[c][r].status == 0) continue;
       let brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
       let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
       bricks[c][r].x = brickX;
@@ -137,6 +139,19 @@ function drawBricks() {
       ctx.fillStyle = "#0095DD";
       ctx.fill();
       ctx.closePath();
+    }
+  }
+}
+
+function collisionDetection() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      let b = bricks[c][r];
+      if(b.status==0) continue;
+      if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+        dy = -dy;
+        b.status = 0;
+      }
     }
   }
 }

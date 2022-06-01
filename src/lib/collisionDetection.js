@@ -1,6 +1,6 @@
 import { ball } from "../components/ball";
 import { bricks } from "../components/bricks";
-import { windowHeight, windowWidth } from "../components/canvas";
+import { ctx, windowHeight, windowWidth } from "../components/canvas";
 import { paddle } from "../components/paddle";
 import { state } from "./state";
 
@@ -34,6 +34,9 @@ function detectCollisionWithBorders() {
   }
   if (ballBottom >= windowHeight) {
     state.lives--;
+    state.displayText.opacity = 1;
+    state.displayText.text = "You Just lost a live!";
+    state.displayText.color = "red";
     resetBall();
   }
 }

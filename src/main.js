@@ -7,7 +7,7 @@ import {
   detectCollisionWithBricks,
   detectCollisionWithPaddle,
 } from "./lib/collisionDetection";
-import { detectLose, detectWin, drawLives, drawScore } from "./lib/state";
+import { detectLose, detectWin, drawCentralText, drawLives, drawScore } from "./lib/state";
 import { drawPaddle } from "./components/paddle";
 
 function animate() {
@@ -22,7 +22,7 @@ function animate() {
   detectCollisionWithPaddle();
   const gameWon = detectWin();
   const gameLost = detectLose();
-
+  drawCentralText();
   if (gameWon || gameLost) return;
 
   requestAnimationFrame(animate);

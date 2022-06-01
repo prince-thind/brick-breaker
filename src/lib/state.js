@@ -11,6 +11,7 @@ const state = {
     left: false,
     right: false,
   },
+  displayText: { opacity: 0, text: "" },
 };
 
 function keyDownHandler(e) {
@@ -41,8 +42,12 @@ function drawLives() {
 
 function detectWin() {
   if (state.score == bricks.length) {
-    alert("you Won The Game!");
-    window.location.reload();
+    state.displayText.opacity = 1;
+    state.displayText.text = "You Won! Click to reload";
+    state.displayText.color = "green";
+    document.addEventListener("click", () => {
+      window.location.reload();
+    });
     return true;
   }
   return false;
@@ -50,12 +55,29 @@ function detectWin() {
 
 function detectLose() {
   if (state.lives == 0) {
-    alert("you Lost!");
-    window.location.reload();
+    state.displayText.opacity = 1;
+    state.displayText.text = "You Lost! Click to reload";
+    state.displayText.color = "red";
+    document.addEventListener("click", () => {
+      window.location.reload();
+    });
 
     return true;
   }
   return false;
 }
 
-export { state, drawScore, drawLives, detectWin, detectLose };
+function drawCentralText() {
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.globalAlpha = state.displayText.opacity;
+  ctx.fillStyle = state.displayText.color;
+  ctx.fillText(state.displayText.text, windowWidth / 2, 35);
+  state.displayText.opacity -= 0.005;
+  state.displayText.opacity = Math.max(0, state.displayText.opacity);
+  ctx.restore();
+  // ctx.fillStyle = "black";
+  // ctx.globalAlpha = 1;
+}
+
+export { state, drawScore, drawLives, detectWin, detectLose, drawCentralText };

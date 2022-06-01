@@ -5,8 +5,10 @@ import { drawBricks } from "./components/bricks";
 import {
   detectCollisionWithBorders,
   detectCollisionWithBricks,
+  detectCollisionWithPaddle,
 } from "./lib/collisionDetection";
 import { detectLose, detectWin, drawLives, drawScore } from "./lib/state";
+import { drawPaddle } from "./components/paddle";
 
 function animate() {
   clearCanvas();
@@ -16,6 +18,8 @@ function animate() {
   detectCollisionWithBricks();
   drawLives();
   drawScore();
+  drawPaddle();
+  detectCollisionWithPaddle();
   const gameWon = detectWin();
   const gameLost = detectLose();
 

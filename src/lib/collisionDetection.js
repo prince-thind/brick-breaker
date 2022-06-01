@@ -1,6 +1,7 @@
 import { ball } from "../components/ball";
 import { bricks } from "../components/bricks";
 import { windowHeight, windowWidth } from "../components/canvas";
+import { paddle } from "../components/paddle";
 import { state } from "./state";
 
 function detectCollisionWithBricks() {
@@ -39,6 +40,9 @@ function detectCollisionWithBorders() {
 
 function detectCollisionWithBrick(brick) {
   const hit = detectCollisionWithRect(brick);
+  if (hit) {
+    state.score++;
+  }
   brick.hit = hit;
 }
 
@@ -50,10 +54,20 @@ function detectCollisionWithRect(rect) {
     rect.y + rect.height > ball.y
   ) {
     ball.velocity.y = -ball.velocity.y;
-    state.score++;
     return true;
   }
   return false;
 }
 
-export { detectCollisionWithBricks, detectCollisionWithBorders };
+function detectCollisionWithPaddle() {
+  const isInside=detectCollisionWithRect(paddle);
+  if(isInside){
+    ball.velocity.y=-Math.abs(ball.velocity.y);
+  }
+}
+
+export {
+  detectCollisionWithBricks,
+  detectCollisionWithBorders,
+  detectCollisionWithPaddle,
+};

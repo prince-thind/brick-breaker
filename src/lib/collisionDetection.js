@@ -33,9 +33,16 @@ function detectCollisionWithBorders() {
     ball.velocity.y = -ball.velocity.y * randomNoise;
   }
   if (ballBottom >= windowHeight) {
-    ball.y = windowHeight - ball.radius;
-    ball.velocity.y = -ball.velocity.y * randomNoise;
+    state.lives--;
+    resetBall();
   }
+}
+
+function resetBall() {
+  ball.x = innerWidth / 2;
+  ball.y = innerHeight / 2;
+  ball.velocity.x = windowWidth / 300;
+  ball.velocity.y = -windowHeight / 300;
 }
 
 function detectCollisionWithBrick(brick) {
@@ -60,9 +67,9 @@ function detectCollisionWithRect(rect) {
 }
 
 function detectCollisionWithPaddle() {
-  const isInside=detectCollisionWithRect(paddle);
-  if(isInside){
-    ball.velocity.y=-Math.abs(ball.velocity.y);
+  const isInside = detectCollisionWithRect(paddle);
+  if (isInside) {
+    ball.velocity.y = -Math.abs(ball.velocity.y);
   }
 }
 

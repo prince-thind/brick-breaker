@@ -1,12 +1,17 @@
 import { ball } from "../components/ball";
-import {  bricks } from "../components/bricks";
+import { bricks } from "../components/bricks";
+import { state } from "./state";
 
 function detectCollisionWithBricks() {
   for (const brick of bricks) {
     if (brick.hit) continue;
-    detectCollisionWithRect(brick);
-    // brick.hit = hit;
+    detectCollisionWithBrick(brick);
   }
+}
+
+function detectCollisionWithBrick(brick) {
+  const hit = detectCollisionWithRect(brick);
+  brick.hit = hit;
 }
 
 function detectCollisionWithRect(rect) {
@@ -17,8 +22,10 @@ function detectCollisionWithRect(rect) {
     rect.y + rect.height > ball.y
   ) {
     ball.velocity.y = -ball.velocity.y;
-    rect.hit = true;
+    state.score++;
+    return true;
   }
+  return false;
 }
 
 export { detectCollisionWithBricks };
